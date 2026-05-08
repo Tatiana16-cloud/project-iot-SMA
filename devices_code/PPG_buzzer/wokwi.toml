@@ -1,0 +1,7 @@
+[wokwi]
+version = 1
+firmware = "build/PPG_buzzer.ino.bin"
+elf = "build/PPG_buzzer.ino.elf"
+
+diagram = "diagram.json"
+libraries = "libraries.txt"

@@ -1,0 +1,18 @@
+{
+    "catalogURL": "http://catalog:9080",
+    "brokerIP": "broker.hivemq.com",
+    "brokerPort": 1883,
+    "nodered_url": "http://localhost:1880/ui/",
+    "serviceInfo": {
+      "serviceID": "TelegramBot",
+      "telegram_token": "8389356663:AAH15YAmpUxXg2-1wa8qwK_my8tIcPIBuXU",
+      "MQTT_sub": [
+        "SC/alerts/#"
+      ],
+      "MQTT_pub": [
+        "SC/{User}/{Room}/alarm_off"
+      ]
+    }
+  }
+  
+  

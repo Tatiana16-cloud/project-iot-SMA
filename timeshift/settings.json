@@ -1,0 +1,26 @@
+{
+    "catalogURL": "http://catalog:9080/catalog",
+    "brokerIP": "broker.hivemq.com",
+    "brokerPort": 1883,
+    "timezone": "Europe/Rome",
+  
+    "light_raw_threshold": 1500,
+    "light_wait_sec": 5,
+  
+    "serviceInfo": {
+      "serviceID": "TimeShift",
+      "MQTT_pub": {
+        "sampling": "SC/{User}/{Room}/sampling",
+        "bedtime": "SC/{User}/{Room}/bedtime",
+        "wakeup": "SC/{User}/{Room}/wakeup",
+        "down": "SC/{User}/{Room}/down",
+        "servoV": "SC/{User}/{Room}/servoCurtain/set",
+        "LedL": "SC/{User}/{Room}/LedL/set"
+      },
+      "MQTT_sub": {
+        "Light": "SC/{User}/{Room}/Light",
+        "InitTimeshift": "SC/{User}/{Room}/initTimeshift"
+      }
+    }
+  }
+  

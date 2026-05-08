@@ -1,0 +1,15 @@
+{
+    "catalogURL": "http://catalog:9080/catalog",
+    "brokerIP": "broker.hivemq.com",
+    "brokerPort": 1883,
+  
+    "serviceInfo": {
+      "serviceID": "AlarmControl",
+      "MQTT_sub": [
+        "SC/+/+/hr",
+        "SC/+/+/dht"
+      ],
+      "MQTT_pub_alert_env": "SC/alerts/{User}/{Room}/dht",
+      "MQTT_pub_alert_hr":  "SC/alerts/{User}/{Room}/hr"
+    }
+  }

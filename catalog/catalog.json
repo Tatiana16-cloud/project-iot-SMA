@@ -1,0 +1,282 @@
+{
+  "catalog_url": "http://catalog:9080",
+  "projectOwners": [
+    "Andres Felipe Medina Ospina",
+    "Tatiana Camila Cordoba Acosta"
+  ],
+  "project_name": "sleepmonitoring",
+  "broker": {
+    "IP": "broker.hivemq.com",
+    "port": 1883
+  },
+  "servicesList": [
+    {
+      "serviceID": "TelegramBot",
+      "REST_endpoint": "",
+      "MQTT_sub": [
+        "SC/alerts/#"
+      ],
+      "MQTT_pub": [],
+      "timestamp": "2026-05-01 20:18:30"
+    },
+    {
+      "serviceID": "ReportsGenerator",
+      "REST_endpoint": "http://reports_generator:8093",
+      "MQTT_sub": [],
+      "MQTT_pub": [],
+      "timestamp": "2026-05-01 20:18:32"
+    },
+    {
+      "serviceID": "AlarmControl",
+      "REST_endpoint": "",
+      "MQTT_sub": [
+        "SC/+/+/hr",
+        "SC/+/+/dht"
+      ],
+      "MQTT_pub": [
+        "SC/alerts/{User}/{Room}/hr",
+        "SC/alerts/{User}/{Room}/dht"
+      ],
+      "timestamp": "2026-05-01 20:18:29"
+    },
+    {
+      "serviceID": "ThingSpeakAdaptor",
+      "REST_endpoint": "https://api.thingspeak.com",
+      "MQTT_sub": [
+        "SC/+/+/hr",
+        "SC/+/+/dht",
+        "SC/+/+/Light",
+        "SC/+/+/ServoDHT",
+        "SC/+/+/LedL",
+        "SC/+/+/servoCurtain",
+        "SC/+/+/wakeup",
+        "SC/alerts/+/+/hr",
+        "SC/alerts/+/+/dht",
+        "SC/+/+/initTimeshift"
+      ],
+      "MQTT_pub": [],
+      "timestamp": "2026-05-01 20:18:29"
+    },
+    {
+      "serviceID": "TimeShift",
+      "REST_endpoint": "",
+      "MQTT_sub": [
+        "SC/{User}/{Room}/Light",
+        "SC/{User}/{Room}/initTimeshift"
+      ],
+      "MQTT_pub": [
+        "SC/{User}/{Room}/sampling",
+        "SC/{User}/{Room}/bedtime",
+        "SC/{User}/{Room}/wakeup",
+        "SC/{User}/{Room}/down",
+        "SC/{User}/{Room}/servoCurtain/set",
+        "SC/{User}/{Room}/LedL/set"
+      ],
+      "timestamp": "2026-05-01 20:18:29"
+    }
+  ],
+  "thingspeak_pool": {
+    "slots": [
+      {
+        "channel_id": "3214159",
+        "write_api_key": "VT4XBCNL1Y744VXE",
+        "read_api_key": "HO3BMM5NYE8DQQCR",
+        "status": "assigned",
+        "assigned_to_room": "rm-159c1f588a",
+        "updated_at": "2026-05-01 19:56:39"
+      },
+      {
+        "channel_id": "3030033",
+        "write_api_key": "5NEY81Y5TTKRGUYG",
+        "read_api_key": "BYZ3PLA6ZEKXGBKV",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": "2026-05-01 17:51:39"
+      },
+      {
+        "channel_id": "3348532",
+        "write_api_key": "IYF1PLUHUCS80FI6",
+        "read_api_key": "7ID1LYN6Y57TREAK",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": "2026-05-01 17:51:22"
+      },
+      {
+        "channel_id": "3348534",
+        "write_api_key": "V87QYBV15NOZCSSI",
+        "read_api_key": "13EDF12ZI6XBR9ML",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": "2026-04-19 23:15:00"
+      },
+      {
+        "channel_id": "3348898",
+        "write_api_key": "S1GNQ0492L3UBTYI",
+        "read_api_key": "YO44JIJ9B85D42X6",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": "2026-04-19 23:15:00"
+      }
+    ]
+  },
+  "devicesList": [
+    {
+      "deviceName": "HealthMonitorPPG",
+      "device_type": "sensor_actuator",
+      "measureType": [
+        "HeartRate"
+      ],
+      "availableServices": [
+        "MQTT"
+      ],
+      "servicesDetails": [
+        {
+          "serviceType": "MQTT",
+          "topic_pub": [
+            "SC/usr-2338764559/rm-159c1f588a/hr",
+            "SC/usr-2338764559/rm-159c1f588a/down"
+          ],
+          "topic_sub": [
+            "SC/alerts/usr-2338764559/rm-159c1f588a/hr",
+            "SC/usr-2338764559/rm-159c1f588a/wakeup",
+            "SC/usr-2338764559/rm-159c1f588a/sampling",
+            "SC/usr-2338764559/rm-159c1f588a/alarm_off"
+          ]
+        }
+      ],
+      "deviceID": "dev-6e3bfb379c",
+      "timestamp": "2026-05-01 19:56:39"
+    },
+    {
+      "deviceName": "EnvMonitorDHT",
+      "device_type": "sensor",
+      "measureType": [
+        "Temperature",
+        "Humidity",
+        "Servo"
+      ],
+      "availableServices": [
+        "MQTT"
+      ],
+      "servicesDetails": [
+        {
+          "serviceType": "MQTT",
+          "topic_pub": [
+            "SC/usr-2338764559/rm-159c1f588a/dht",
+            "SC/usr-2338764559/rm-159c1f588a/ServoDHT",
+            "SC/usr-2338764559/rm-159c1f588a/down"
+          ],
+          "topic_sub": [
+            "SC/alerts/usr-2338764559/rm-159c1f588a/dht",
+            "SC/usr-2338764559/rm-159c1f588a/sampling"
+          ]
+        }
+      ],
+      "deviceID": "dev-1b4d6c9d90",
+      "timestamp": "2026-05-01 19:56:39"
+    },
+    {
+      "deviceName": "ActuatorControl",
+      "device_type": "actuator",
+      "measureType": [
+        "Servo",
+        "Light",
+        "LedL"
+      ],
+      "availableServices": [
+        "MQTT"
+      ],
+      "servicesDetails": [
+        {
+          "serviceType": "MQTT",
+          "topic_pub": [
+            "SC/usr-2338764559/rm-159c1f588a/servoCurtain",
+            "SC/usr-2338764559/rm-159c1f588a/Light",
+            "SC/usr-2338764559/rm-159c1f588a/LedL",
+            "SC/usr-2338764559/rm-159c1f588a/down"
+          ],
+          "topic_sub": [
+            "SC/usr-2338764559/rm-159c1f588a/servoCurtain",
+            "SC/usr-2338764559/rm-159c1f588a/LedL",
+            "SC/usr-2338764559/rm-159c1f588a/sampling"
+          ]
+        }
+      ],
+      "deviceID": "dev-21a912bee4",
+      "timestamp": "2026-05-01 19:56:39"
+    }
+  ],
+  "roomsList": [
+    {
+      "roomID": "rm-159c1f588a",
+      "userID": "usr-2338764559",
+      "roomName": "randomRoom",
+      "times": {
+        "timeawake": "09:00",
+        "timesleep": "23:00"
+      },
+      "threshold_parameters": {
+        "hr_low": 34.0,
+        "hr_high": 45.0,
+        "temp_low": 23.0,
+        "temp_high": 45.0,
+        "hum_low": 23.0,
+        "hum_high": 67.0,
+        "light_threshold": 3000
+      },
+      "thingspeak_info": {
+        "channel_id": "3214159",
+        "write_api_key": "VT4XBCNL1Y744VXE",
+        "read_api_key": "HO3BMM5NYE8DQQCR"
+      },
+      "connected_devices": [
+        {
+          "deviceID": "dev-6e3bfb379c",
+          "role": "HealthMonitorPPG"
+        },
+        {
+          "deviceID": "dev-1b4d6c9d90",
+          "role": "EnvMonitorDHT"
+        },
+        {
+          "deviceID": "dev-21a912bee4",
+          "role": "ActuatorControl"
+        }
+      ],
+      "timestamp": "2026-05-01 19:56:39"
+    }
+  ],
+  "usersList": [
+    {
+      "role": "User",
+      "user_information": {
+        "userName": "Alice",
+        "phone": "+573001112233"
+      },
+      "auth": {
+        "password_salt": "abc",
+        "password_hash": "def"
+      },
+      "userID": "usr-29fc2dbe2c",
+      "timestamp": "2026-04-19 18:16:11"
+    },
+    {
+      "role": "User",
+      "user_information": {
+        "userName": "randomPerson",
+        "phone": "+393513194480"
+      },
+      "dashboard_info": {
+        "dashboard_username": "randomPerson",
+        "dashboard_password": null
+      },
+      "auth": {
+        "password_salt": "391eec3c4cba74e2",
+        "password_hash": "f107397f3379dedd8b034e9bde67a4c6465d3887b051d39db1d8a310be3b4db6"
+      },
+      "timestamp": "2026-05-01 19:56:03",
+      "userID": "usr-2338764559"
+    }
+  ],
+  "lastUpdate": "2026-05-01 20:18:32"
+}

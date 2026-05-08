@@ -1,0 +1,5 @@
+[wokwi]
+version = 1
+firmware = "build/Light_Servocurtain.ino.bin"
+elf = "build/Light_Servocurtain.ino.elf"
+

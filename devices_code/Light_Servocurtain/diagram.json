@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "author": "ANDRES FELIPE MEDINA OSPINA",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-servo", "id": "srv1", "top": -48, "left": 220, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -56, "left": -200, "attrs": {} },
+    { "type": "wokwi-led", "id": "led1", "top": 110, "left": 220, "attrs": { "color": "red" } },
+    { "type": "wokwi-resistor", "id": "r_led", "top": 170, "left": 220, "attrs": { "value": "220" } }
+  ],
+  "connections": [
+    ["esp:TX", "$serialMonitor:RX", "", []],
+    ["esp:RX", "$serialMonitor:TX", "", []],
+
+    ["srv1:V+",  "esp:5V",    "red",   []],
+    ["srv1:GND", "esp:GND.1", "black", []],
+    ["srv1:PWM", "esp:15",    "green", []],
+
+    ["pot1:VCC", "esp:3V3",   "red",   []],
+    ["pot1:GND", "esp:GND.2", "black", []],
+    ["pot1:SIG", "esp:34",    "green", []],
+
+    ["esp:4",    "r_led:1",   "orange", []],
+    ["r_led:2",  "led1:A",    "orange", []],
+    ["led1:C",   "esp:GND.3", "black",  []]
+  ],
+  "dependencies": {
+    "libraries": [
+      "arduino-libraries/PubSubClient@^2.8",
+      "madhephaestus/ESP32Servo@^1.1.2"
+    ]
+  }  
+}

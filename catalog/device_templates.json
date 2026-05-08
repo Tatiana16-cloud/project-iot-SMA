@@ -1,0 +1,70 @@
+{
+  "templates": [
+    {
+      "role": "HealthMonitorPPG",
+      "deviceName": "HealthMonitorPPG",
+      "device_type": "sensor_actuator",
+      "measureType": ["HeartRate"],
+      "availableServices": ["MQTT"],
+      "servicesDetails": [
+        {
+          "serviceType": "MQTT",
+          "topic_pub": [
+            "SC/{User}/{Room}/hr",
+            "SC/{User}/{Room}/down"
+          ],
+          "topic_sub": [
+            "SC/alerts/{User}/{Room}/hr",
+            "SC/{User}/{Room}/wakeup",
+            "SC/{User}/{Room}/sampling",
+            "SC/{User}/{Room}/alarm_off"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "EnvMonitorDHT",
+      "deviceName": "EnvMonitorDHT",
+      "device_type": "sensor",
+      "measureType": ["Temperature", "Humidity", "Servo"],
+      "availableServices": ["MQTT"],
+      "servicesDetails": [
+        {
+          "serviceType": "MQTT",
+          "topic_pub": [
+            "SC/{User}/{Room}/dht",
+            "SC/{User}/{Room}/ServoDHT",
+            "SC/{User}/{Room}/down"
+          ],
+          "topic_sub": [
+            "SC/alerts/{User}/{Room}/dht",
+            "SC/{User}/{Room}/sampling"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "ActuatorControl",
+      "deviceName": "ActuatorControl",
+      "device_type": "actuator",
+      "measureType": ["Servo", "Light", "LedL"],
+      "availableServices": ["MQTT"],
+      "servicesDetails": [
+        {
+          "serviceType": "MQTT",
+          "topic_pub": [
+            "SC/{User}/{Room}/servoCurtain",
+            "SC/{User}/{Room}/Light",
+            "SC/{User}/{Room}/LedL",
+            "SC/{User}/{Room}/down"
+          ],
+          "topic_sub": [
+            "SC/{User}/{Room}/servoCurtain",
+            "SC/{User}/{Room}/LedL",
+            "SC/{User}/{Room}/sampling"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -17,14 +17,14 @@
         "SC/alerts/#"
       ],
       "MQTT_pub": [],
-      "timestamp": "2026-05-17 14:55:07"
+      "timestamp": "2026-05-17 22:23:20"
     },
     {
       "serviceID": "ReportsGenerator",
       "REST_endpoint": "http://reports_generator:8093",
       "MQTT_sub": [],
       "MQTT_pub": [],
-      "timestamp": "2026-05-17 14:55:08"
+      "timestamp": "2026-05-17 22:27:02"
     },
     {
       "serviceID": "AlarmControl",
@@ -37,7 +37,7 @@
         "SC/alerts/{User}/{Room}/hr",
         "SC/alerts/{User}/{Room}/dht"
       ],
-      "timestamp": "2026-05-17 14:55:06"
+      "timestamp": "2026-05-17 22:23:20"
     },
     {
       "serviceID": "ThingSpeakAdaptor",
@@ -55,7 +55,7 @@
         "SC/+/+/initTimeshift"
       ],
       "MQTT_pub": [],
-      "timestamp": "2026-05-17 14:55:06"
+      "timestamp": "2026-05-17 22:23:20"
     },
     {
       "serviceID": "TimeShift",
@@ -72,7 +72,7 @@
         "SC/{User}/{Room}/servoCurtain/set",
         "SC/{User}/{Room}/LedL/set"
       ],
-      "timestamp": "2026-05-17 14:55:06"
+      "timestamp": "2026-05-17 22:23:20"
     }
   ],
   "thingspeak_pool": {
@@ -89,9 +89,9 @@
         "channel_id": "3030033",
         "write_api_key": "5NEY81Y5TTKRGUYG",
         "read_api_key": "BYZ3PLA6ZEKXGBKV",
-        "status": "available",
-        "assigned_to_room": null,
-        "updated_at": "2026-05-01 17:51:39"
+        "status": "assigned",
+        "assigned_to_room": "rm-834a06c982",
+        "updated_at": "2026-05-17 22:26:12"
       },
       {
         "channel_id": "3348532",
@@ -145,7 +145,7 @@
         }
       ],
       "deviceID": "dev-ppg-001",
-      "timestamp": "2026-05-17 15:23:56"
+      "timestamp": "2026-05-17 22:08:07"
     },
     {
       "deviceName": "EnvMonitorDHT",
@@ -205,6 +205,91 @@
       ],
       "deviceID": "dev-act-001",
       "timestamp": "2026-05-17 15:15:04"
+    },
+    {
+      "deviceName": "HealthMonitorPPG",
+      "device_type": "sensor_actuator",
+      "measureType": [
+        "HeartRate"
+      ],
+      "availableServices": [
+        "MQTT"
+      ],
+      "servicesDetails": [
+        {
+          "serviceType": "MQTT",
+          "topic_pub": [
+            "SC/usr-acf85f7c4a/rm-834a06c982/hr",
+            "SC/usr-acf85f7c4a/rm-834a06c982/down"
+          ],
+          "topic_sub": [
+            "SC/alerts/usr-acf85f7c4a/rm-834a06c982/hr",
+            "SC/usr-acf85f7c4a/rm-834a06c982/wakeup",
+            "SC/usr-acf85f7c4a/rm-834a06c982/sampling",
+            "SC/usr-acf85f7c4a/rm-834a06c982/alarm_off"
+          ]
+        }
+      ],
+      "deviceID": "dev-ppg-002",
+      "timestamp": "2026-05-17 22:26:12"
+    },
+    {
+      "deviceName": "EnvMonitorDHT",
+      "device_type": "sensor",
+      "measureType": [
+        "Temperature",
+        "Humidity",
+        "Servo"
+      ],
+      "availableServices": [
+        "MQTT"
+      ],
+      "servicesDetails": [
+        {
+          "serviceType": "MQTT",
+          "topic_pub": [
+            "SC/usr-acf85f7c4a/rm-834a06c982/dht",
+            "SC/usr-acf85f7c4a/rm-834a06c982/ServoDHT",
+            "SC/usr-acf85f7c4a/rm-834a06c982/down"
+          ],
+          "topic_sub": [
+            "SC/alerts/usr-acf85f7c4a/rm-834a06c982/dht",
+            "SC/usr-acf85f7c4a/rm-834a06c982/sampling"
+          ]
+        }
+      ],
+      "deviceID": "dev-dht-002",
+      "timestamp": "2026-05-17 22:26:12"
+    },
+    {
+      "deviceName": "ActuatorControl",
+      "device_type": "actuator",
+      "measureType": [
+        "Servo",
+        "Light",
+        "LedL"
+      ],
+      "availableServices": [
+        "MQTT"
+      ],
+      "servicesDetails": [
+        {
+          "serviceType": "MQTT",
+          "topic_pub": [
+            "SC/usr-acf85f7c4a/rm-834a06c982/servoCurtain",
+            "SC/usr-acf85f7c4a/rm-834a06c982/Light",
+            "SC/usr-acf85f7c4a/rm-834a06c982/LedL",
+            "SC/usr-acf85f7c4a/rm-834a06c982/down"
+          ],
+          "topic_sub": [
+            "SC/usr-acf85f7c4a/rm-834a06c982/servoCurtain",
+            "SC/usr-acf85f7c4a/rm-834a06c982/LedL",
+            "SC/usr-acf85f7c4a/rm-834a06c982/sampling"
+          ]
+        }
+      ],
+      "deviceID": "dev-act-002",
+      "timestamp": "2026-05-17 22:26:12"
     }
   ],
   "roomsList": [
@@ -213,8 +298,8 @@
       "userID": "usr-acf85f7c4a",
       "roomName": "Firstroom",
       "times": {
-        "timeawake": "17:25",
-        "timesleep": "17:24"
+        "timeawake": "00:15",
+        "timesleep": "00:13"
       },
       "threshold_parameters": {
         "hr_low": 60.0,
@@ -244,7 +329,45 @@
           "role": "ActuatorControl"
         }
       ],
-      "timestamp": "2026-05-17 15:22:27"
+      "timestamp": "2026-05-17 22:11:49"
+    },
+    {
+      "roomID": "rm-834a06c982",
+      "userID": "usr-acf85f7c4a",
+      "roomName": "secondroom",
+      "times": {
+        "timeawake": "09:30",
+        "timesleep": "23:00"
+      },
+      "threshold_parameters": {
+        "hr_low": 45.0,
+        "hr_high": 120.0,
+        "temp_low": 18.0,
+        "temp_high": 26.0,
+        "hum_low": 40.0,
+        "hum_high": 50.0,
+        "light_threshold": 2400
+      },
+      "thingspeak_info": {
+        "channel_id": "3030033",
+        "write_api_key": "5NEY81Y5TTKRGUYG",
+        "read_api_key": "BYZ3PLA6ZEKXGBKV"
+      },
+      "connected_devices": [
+        {
+          "deviceID": "dev-ppg-002",
+          "role": "HealthMonitorPPG"
+        },
+        {
+          "deviceID": "dev-dht-002",
+          "role": "EnvMonitorDHT"
+        },
+        {
+          "deviceID": "dev-act-002",
+          "role": "ActuatorControl"
+        }
+      ],
+      "timestamp": "2026-05-17 22:26:12"
     }
   ],
   "usersList": [
@@ -279,5 +402,5 @@
       "userID": "usr-acf85f7c4a"
     }
   ],
-  "lastUpdate": "2026-05-17 15:23:56"
+  "lastUpdate": "2026-05-17 22:27:02"
 }

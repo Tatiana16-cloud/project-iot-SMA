@@ -3,6 +3,7 @@ import json
 import time
 import uuid
 import copy
+import hashlib
 from datetime import datetime
 import threading
 import logging
@@ -207,6 +208,47 @@ class CatalogService:
             raise cherrypy.HTTPError(405)
         return self._json_response(self._load_device_pool())
 
+    # ----- Auth: dedicated login endpoint (no full catalog dump to the caller) -----
+    @cherrypy.expose
+    def login(self, **kwargs):
+        if cherrypy.request.method.upper() != "POST":
+            raise cherrypy.HTTPError(405)
+
+        body = self._read_body()
+        # Same normalization the Node-RED function used to do client-side
+        user_id = (body.get("userID") or "").strip().replace("{", "").replace("}", "")
+        phone = "".join(c for c in (body.get("phone") or "") if c.isdigit())
+        password = body.get("password") or ""
+
+        if not user_id or not phone or not password:
+            return self._json_response(
+                {"ok": False, "reason": "missing_fields"}, status=400
+            )
+
+        data = self._get_catalog()
+        for u in data.get("usersList", []):
+            u_id = (u.get("userID") or "").strip().replace("{", "").replace("}", "")
+            u_phone = "".join(
+                c for c in (u.get("user_information", {}).get("phone") or "")
+                if c.isdigit()
+            )
+            if u_id != user_id or u_phone != phone:
+                continue
+            auth = u.get("auth", {}) or {}
+            salt = auth.get("password_salt") or ""
+            stored = auth.get("password_hash") or ""
+            if not salt or not stored:
+                continue
+            computed = hashlib.sha256((salt + password).encode("utf-8")).hexdigest()
+            if computed == stored:
+                return self._json_response({"ok": True, "userID": u.get("userID")})
+            # Match by userID+phone but wrong password — stop looking
+            break
+
+        return self._json_response(
+            {"ok": False, "reason": "invalid_credentials"}, status=401
+        )
+
     # ----- Services: generic CRUD (known IDs, user-supplied allowed) -----
     @cherrypy.expose
     def services(self, serviceID=None, **kwargs):
@@ -325,6 +367,13 @@ class CatalogService:
             data = self._get_catalog()
             collection = data.get("roomsList", [])
             if roomID is None:
+                # Optional filter by userID: GET /rooms?userID=usr-...
+                requested_user = (kwargs.get("userID") or "").strip()
+                if requested_user:
+                    collection = [
+                        r for r in collection
+                        if (r.get("userID") or "").strip() == requested_user
+                    ]
                 return self._json_response(collection)
             idx = self._find_index(collection, "roomID", roomID)
             if idx < 0:

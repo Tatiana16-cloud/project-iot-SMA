@@ -64,7 +64,8 @@ All follow the same pattern:
 > `POST /devices` returns **405** — devices are only created via `POST /rooms`, which takes UUIDs from the device pool.
 
 ### Rooms — `/rooms`
-- `GET /rooms` → full list.
+- `GET /rooms` → full list of all rooms.
+- `GET /rooms?userID=usr-<hex>` → list filtered by owner (only rooms whose `userID` matches). Used by Node-RED so it only receives the logged-in user's rooms.
 - `GET /rooms/{roomID}` → single room.
 - `POST /rooms` — **atomic room creation**:
   - Body: `{userID, roomName, times, threshold_parameters}` (do NOT include IDs — the server assigns them).
@@ -87,6 +88,15 @@ All follow the same pattern:
 
 ### ThingSpeak pool
 - `GET /thingspeak_pool` → full pool status (all slots with their `status` and `assigned_to_room`).
+
+### Authentication — `/login`
+- `POST /login` with JSON body `{ "userID": "...", "phone": "...", "password": "..." }`.
+- The catalog normalizes inputs (strips braces from `userID`, keeps only digits in `phone`), looks up the matching user, computes `sha256(password_salt + password)` and compares it with the stored `auth.password_hash`.
+- Responses:
+  - **200 OK** → `{"ok": true, "userID": "usr-<hex>"}` when credentials match.
+  - **401 Unauthorized** → `{"ok": false, "reason": "invalid_credentials"}` when they don't.
+  - **400 Bad Request** → `{"ok": false, "reason": "missing_fields"}` if any field is empty.
+- This endpoint lets Node-RED (and any other client) validate credentials without downloading the full `usersList` and without seeing other users' password hashes.
 
 ## Device templates (`device_templates.json`)
 

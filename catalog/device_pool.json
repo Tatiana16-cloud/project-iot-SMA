@@ -9,9 +9,9 @@
       },
       {
         "deviceID": "dev-ppg-002",
-        "status": "available",
-        "assigned_to_room": null,
-        "updated_at": null
+        "status": "assigned",
+        "assigned_to_room": "rm-834a06c982",
+        "updated_at": "2026-05-17 22:26:12"
       },
       {
         "deviceID": "dev-ppg-003",
@@ -41,9 +41,9 @@
       },
       {
         "deviceID": "dev-dht-002",
-        "status": "available",
-        "assigned_to_room": null,
-        "updated_at": null
+        "status": "assigned",
+        "assigned_to_room": "rm-834a06c982",
+        "updated_at": "2026-05-17 22:26:12"
       },
       {
         "deviceID": "dev-dht-003",
@@ -73,9 +73,9 @@
       },
       {
         "deviceID": "dev-act-002",
-        "status": "available",
-        "assigned_to_room": null,
-        "updated_at": null
+        "status": "assigned",
+        "assigned_to_room": "rm-834a06c982",
+        "updated_at": "2026-05-17 22:26:12"
       },
       {
         "deviceID": "dev-act-003",

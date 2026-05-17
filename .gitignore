@@ -4,4 +4,7 @@ iot.env
 NodeRed/data/node_modules/
 NodeRed/data/.npm/
 
+# Local tool / editor config
+.claude/
 .vscode/
+.idea/

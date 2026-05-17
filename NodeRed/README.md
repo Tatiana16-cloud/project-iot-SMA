@@ -11,17 +11,17 @@ Node-RED exposes the user-facing web UI at `http://localhost:1880/ui/`. The data
 
 ### 1. Login
 1. User enters userID, phone, and password.
-2. `GET http://catalog:9080/catalog` retrieves `usersList`.
-3. Validation function: normalizes inputs, computes `sha256(salt + password)`, compares to `auth.password_hash`.
+2. `POST http://catalog:9080/login` with body `{userID, phone, password}`.
+3. The Catalog performs the credential check server-side and returns `{ok: bool, userID?, reason?}` — Node-RED never sees other users' hashes.
 4. On success: sets `flow.current_user_id`; switches to room-picker view.
 5. On failure: shows error and clears inputs.
 
 ### 2. Room picker (post-login)
-1. `GET http://catalog:9080/rooms` fetches all rooms.
-2. Filters by `userID == flow.current_user_id`.
-3. Renders one button per room (label = `roomName`).
-4. On click: sets `flow.current_room_id`.
-5. A "Change room" button clears `flow.current_room_id` and re-shows the picker.
+1. `GET http://catalog:9080/rooms?userID=<current_user_id>` fetches **only** the logged-in user's rooms — no other users' data is transferred to Node-RED.
+2. A defensive client-side filter ensures only matching rooms are shown.
+3. Renders one entry per room in the dropdown (label = `roomName`).
+4. On selection: sets `flow.current_room_id`.
+5. A "Change room" button clears `flow.current_room_id` and re-fetches the picker with the same `userID` filter.
 
 ### 3. Dashboard
 1. `load-dashboard` function node constructs the report URL:
@@ -32,8 +32,8 @@ Node-RED exposes the user-facing web UI at `http://localhost:1880/ui/`. The data
 3. Charts display BPM, temperature, humidity trends and sleep quality from the report JSON.
 
 ## Password hashing
-- Algorithm: SHA-256 on `salt + password` (inline in Function node).
-- Required Catalog fields per user: `auth.password_salt`, `auth.password_hash`.
+- Performed by the Catalog at the `POST /login` endpoint.
+- Node-RED no longer hashes or sees credentials beyond what the user typed — it only forwards them to the Catalog and reads the boolean result.
 
 ## Integration with reportGenerator
 - Endpoint: `GET /?user_id=<id>&room_id=<id>&date=YYYY-MM-DD`

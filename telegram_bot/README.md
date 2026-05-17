@@ -3,7 +3,7 @@
 User-facing bot for registration, per-room configuration, dashboard access, and real-time alerts. The system is room-centric: each room has its own sleep schedule, thresholds, and ThingSpeak channel.
 
 ## What it does
-- **Registration**: wizard that collects account info and creates at least one room (name, sleep times, all thresholds, brightness level). The catalog returns minted device UUIDs to paste into ESP32 firmware.
+- **Registration**: wizard that collects account info and creates at least one room (name, sleep times, all thresholds, brightness level). The catalog allocates 3 device UUIDs from the device pool; the bot displays them to the user as a reference, but no manual editing of the ESP32 firmware is required.
 - **Room management**: list rooms, add new rooms, configure or delete individual rooms.
 - **Device visibility per room**: users can open a room, see its connected devices and tap each one to read a short friendly explanation.
 - **Per-room configuration**: wake/sleep times, temperature/humidity min-max, heart-rate min-max, acceptable brightness level (light threshold for curtain automation).
@@ -38,7 +38,7 @@ User-facing bot for registration, per-room configuration, dashboard access, and 
    - Room name → wake time (HH:MM) → sleep time (HH:MM)
    - HR low/high → temp low/high → hum low/high
    - Brightness level (Low / Medium / High → mapped to `light_threshold` scalar)
-3. Catalog POST /rooms returns minted device UUIDs; bot displays them for the user to paste into firmware.
+3. Catalog `POST /rooms` allocates 3 device UUIDs from `device_pool.json`; the bot displays them for reference.
 
 ## Brightness / light threshold
 The user selects an ambient brightness level at which curtains should open:

@@ -22,6 +22,10 @@ TEMPLATES_PATH = os.getenv(
     "CATALOG_TEMPLATES_PATH",
     os.path.join(os.path.dirname(CATALOG_PATH) or ".", "device_templates.json"),
 )
+DEVICE_POOL_PATH = os.getenv(
+    "CATALOG_DEVICE_POOL_PATH",
+    os.path.join(os.path.dirname(CATALOG_PATH) or ".", "device_pool.json"),
+)
 WRITE_TOKEN = os.getenv("CATALOG_WRITE_TOKEN")  # optional
 READ_ONLY = os.getenv("CATALOG_READ_ONLY", "false").lower() == "true"
 
@@ -41,14 +45,16 @@ def uuid_id(prefix: str) -> str:
 
 
 class CatalogService:
-    def __init__(self, json_path: str, templates_path: str):
+    def __init__(self, json_path: str, templates_path: str, device_pool_path: str):
         self.json_path = json_path
         self.templates_path = templates_path
+        self.device_pool_path = device_pool_path
         self._lock = threading.RLock()
         self._catalog = None  # lazy load
         self._last_load = 0.0
         self._templates = None
         self._templates_mtime = 0.0
+        self._device_pool = None  # lazy load (mutable, persisted)
         self._cache_ttl = float(os.getenv("CATALOG_CACHE_TTL", "2.0"))  # seconds
 
     # ------------- Storage helpers -------------
@@ -89,6 +95,26 @@ class CatalogService:
                     self._templates = json.load(f)
                 self._templates_mtime = mtime
             return self._templates
+
+    # ----- Device pool: pre-seeded device UUIDs, mutable & persisted -----
+    def _load_device_pool(self) -> dict:
+        with self._lock:
+            if self._device_pool is None:
+                if not os.path.exists(self.device_pool_path):
+                    raise cherrypy.HTTPError(500, f"No existe {self.device_pool_path}")
+                with open(self.device_pool_path, "r", encoding="utf-8") as f:
+                    self._device_pool = json.load(f)
+            return self._device_pool
+
+    def _save_device_pool_to_disk(self, payload: dict):
+        ensure_parent(self.device_pool_path)
+        with open(self.device_pool_path, "w", encoding="utf-8") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+
+    def _replace_device_pool(self, payload: dict):
+        with self._lock:
+            self._save_device_pool_to_disk(payload)
+            self._device_pool = payload
 
     # ------------- Minimal schema validation -------------
     def _validate_minimal(self, data: dict):
@@ -174,6 +200,12 @@ class CatalogService:
         if cherrypy.request.method.upper() != "GET":
             raise cherrypy.HTTPError(405)
         return self._json_response(self._load_templates())
+
+    @cherrypy.expose
+    def device_pool(self, **kwargs):
+        if cherrypy.request.method.upper() != "GET":
+            raise cherrypy.HTTPError(405)
+        return self._json_response(self._load_device_pool())
 
     # ----- Services: generic CRUD (known IDs, user-supplied allowed) -----
     @cherrypy.expose
@@ -276,7 +308,9 @@ class CatalogService:
             if userID is None:
                 raise cherrypy.HTTPError(400, "Especifica userID en la URL")
             working = copy.deepcopy(self._get_catalog())
-            result = self._delete_user_cascade(working, userID)
+            working_pool = copy.deepcopy(self._load_device_pool())
+            result = self._delete_user_cascade(working, working_pool, userID)
+            self._replace_device_pool(working_pool)
             self._replace_catalog(working)
             return self._json_response(result)
 
@@ -308,9 +342,11 @@ class CatalogService:
             if not user_id:
                 raise cherrypy.HTTPError(400, "Falta userID en payload")
             working = copy.deepcopy(self._get_catalog())
+            working_pool = copy.deepcopy(self._load_device_pool())
             if self._find_index(working.get("usersList", []), "userID", user_id) < 0:
                 raise cherrypy.HTTPError(400, f"userID '{user_id}' no existe")
-            room = self._create_room_cascade(working, user_id, payload)
+            room = self._create_room_cascade(working, working_pool, user_id, payload)
+            self._replace_device_pool(working_pool)
             self._replace_catalog(working)
             return self._json_response(room, status=201)
 
@@ -339,7 +375,9 @@ class CatalogService:
             if roomID is None:
                 raise cherrypy.HTTPError(400, "Especifica roomID en la URL")
             working = copy.deepcopy(self._get_catalog())
-            result = self._delete_room_cascade(working, roomID)
+            working_pool = copy.deepcopy(self._load_device_pool())
+            result = self._delete_room_cascade(working, working_pool, roomID)
+            self._replace_device_pool(working_pool)
             self._replace_catalog(working)
             return self._json_response(result)
 
@@ -408,7 +446,34 @@ class CatalogService:
                 slot["assigned_to_room"] = None
                 slot["updated_at"] = now_str()
 
-    def _instantiate_room_devices(self, data: dict, user_id: str, room_id: str) -> list:
+    def _allocate_device_from_pool(self, pool: dict, role: str, room_id: str) -> str:
+        """Take the first available deviceID for the given role and mark it as assigned."""
+        pools = pool.setdefault("pools", {})
+        role_pool = pools.get(role)
+        if role_pool is None:
+            raise cherrypy.HTTPError(500, f"Rol '{role}' no existe en device_pool.json")
+        for entry in role_pool:
+            if entry.get("status") == "available":
+                entry["status"] = "assigned"
+                entry["assigned_to_room"] = room_id
+                entry["updated_at"] = now_str()
+                return entry["deviceID"]
+        raise cherrypy.HTTPError(409, f"Device pool exhausted for role '{role}'")
+
+    def _release_devices_to_pool(self, pool: dict, device_ids) -> None:
+        """Mark every device whose ID is in `device_ids` back to 'available'."""
+        ids = set(device_ids)
+        if not ids:
+            return
+        pools = pool.setdefault("pools", {})
+        for role_entries in pools.values():
+            for entry in role_entries:
+                if entry.get("deviceID") in ids:
+                    entry["status"] = "available"
+                    entry["assigned_to_room"] = None
+                    entry["updated_at"] = now_str()
+
+    def _instantiate_room_devices(self, data: dict, pool: dict, user_id: str, room_id: str) -> list:
         templates = (self._load_templates() or {}).get("templates") or []
         if not templates:
             raise cherrypy.HTTPError(500, "device_templates.json sin plantillas")
@@ -417,7 +482,8 @@ class CatalogService:
         for tmpl in templates:
             dev = copy.deepcopy(tmpl)
             role = dev.pop("role", dev.get("deviceName"))
-            dev_id = self._mint_unique_id(data, "devicesList", "deviceID", "dev")
+            # Take a deviceID from the pre-seeded device pool instead of minting random
+            dev_id = self._allocate_device_from_pool(pool, role, room_id)
             dev["deviceID"] = dev_id
             for sd in dev.get("servicesDetails", []) or []:
                 for key in ("topic_pub", "topic_sub"):
@@ -431,11 +497,11 @@ class CatalogService:
             refs.append({"deviceID": dev_id, "role": role})
         return refs
 
-    def _create_room_cascade(self, data: dict, user_id: str, payload: dict) -> dict:
+    def _create_room_cascade(self, data: dict, pool: dict, user_id: str, payload: dict) -> dict:
         rooms_list = data.setdefault("roomsList", [])
         room_id = self._mint_unique_id(data, "roomsList", "roomID", "rm")
         slot = self._allocate_pool_slot(data, room_id)
-        devices_refs = self._instantiate_room_devices(data, user_id, room_id)
+        devices_refs = self._instantiate_room_devices(data, pool, user_id, room_id)
         room = {
             "roomID": room_id,
             "userID": user_id,
@@ -453,7 +519,7 @@ class CatalogService:
         rooms_list.append(room)
         return room
 
-    def _delete_room_cascade(self, data: dict, room_id: str) -> dict:
+    def _delete_room_cascade(self, data: dict, pool: dict, room_id: str) -> dict:
         rooms = data.setdefault("roomsList", [])
         idx = self._find_index(rooms, "roomID", room_id)
         if idx < 0:
@@ -464,10 +530,12 @@ class CatalogService:
             d for d in data.get("devicesList", []) if d.get("deviceID") not in set(dev_ids)
         ]
         self._release_pool_slot(data, room_id)
+        # Release the device UUIDs back to the device pool
+        self._release_devices_to_pool(pool, dev_ids)
         rooms.pop(idx)
         return {"deleted_room": room_id, "deleted_devices": dev_ids}
 
-    def _delete_user_cascade(self, data: dict, user_id: str) -> dict:
+    def _delete_user_cascade(self, data: dict, pool: dict, user_id: str) -> dict:
         users = data.setdefault("usersList", [])
         idx = self._find_index(users, "userID", user_id)
         if idx < 0:
@@ -475,7 +543,7 @@ class CatalogService:
         user_rooms = [r.get("roomID") for r in data.get("roomsList", []) if r.get("userID") == user_id]
         all_deleted_devices = []
         for rid in user_rooms:
-            res = self._delete_room_cascade(data, rid)
+            res = self._delete_room_cascade(data, pool, rid)
             all_deleted_devices.extend(res.get("deleted_devices", []))
         users.pop(idx)
         return {
@@ -551,7 +619,7 @@ class CatalogService:
 
 # --------- Server bootstrap ---------
 def run():
-    svc = CatalogService(CATALOG_PATH, TEMPLATES_PATH)
+    svc = CatalogService(CATALOG_PATH, TEMPLATES_PATH, DEVICE_POOL_PATH)
     conf = {
         "/": {
             "tools.response_headers.on": True,

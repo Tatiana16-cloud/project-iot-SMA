@@ -17,14 +17,14 @@
         "SC/alerts/#"
       ],
       "MQTT_pub": [],
-      "timestamp": "2026-05-01 20:18:30"
+      "timestamp": "2026-05-17 14:55:07"
     },
     {
       "serviceID": "ReportsGenerator",
       "REST_endpoint": "http://reports_generator:8093",
       "MQTT_sub": [],
       "MQTT_pub": [],
-      "timestamp": "2026-05-01 20:18:32"
+      "timestamp": "2026-05-17 14:55:08"
     },
     {
       "serviceID": "AlarmControl",
@@ -37,7 +37,7 @@
         "SC/alerts/{User}/{Room}/hr",
         "SC/alerts/{User}/{Room}/dht"
       ],
-      "timestamp": "2026-05-01 20:18:29"
+      "timestamp": "2026-05-17 14:55:06"
     },
     {
       "serviceID": "ThingSpeakAdaptor",
@@ -55,7 +55,7 @@
         "SC/+/+/initTimeshift"
       ],
       "MQTT_pub": [],
-      "timestamp": "2026-05-01 20:18:29"
+      "timestamp": "2026-05-17 14:55:06"
     },
     {
       "serviceID": "TimeShift",
@@ -72,7 +72,7 @@
         "SC/{User}/{Room}/servoCurtain/set",
         "SC/{User}/{Room}/LedL/set"
       ],
-      "timestamp": "2026-05-01 20:18:29"
+      "timestamp": "2026-05-17 14:55:06"
     }
   ],
   "thingspeak_pool": {
@@ -82,8 +82,8 @@
         "write_api_key": "VT4XBCNL1Y744VXE",
         "read_api_key": "HO3BMM5NYE8DQQCR",
         "status": "assigned",
-        "assigned_to_room": "rm-159c1f588a",
-        "updated_at": "2026-05-01 19:56:39"
+        "assigned_to_room": "rm-67b69a77c0",
+        "updated_at": "2026-05-17 15:12:40"
       },
       {
         "channel_id": "3030033",
@@ -133,19 +133,19 @@
         {
           "serviceType": "MQTT",
           "topic_pub": [
-            "SC/usr-2338764559/rm-159c1f588a/hr",
-            "SC/usr-2338764559/rm-159c1f588a/down"
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/hr",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/down"
           ],
           "topic_sub": [
-            "SC/alerts/usr-2338764559/rm-159c1f588a/hr",
-            "SC/usr-2338764559/rm-159c1f588a/wakeup",
-            "SC/usr-2338764559/rm-159c1f588a/sampling",
-            "SC/usr-2338764559/rm-159c1f588a/alarm_off"
+            "SC/alerts/usr-acf85f7c4a/rm-67b69a77c0/hr",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/wakeup",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/sampling",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/alarm_off"
           ]
         }
       ],
-      "deviceID": "dev-6e3bfb379c",
-      "timestamp": "2026-05-01 19:56:39"
+      "deviceID": "dev-ppg-001",
+      "timestamp": "2026-05-17 15:23:56"
     },
     {
       "deviceName": "EnvMonitorDHT",
@@ -162,18 +162,19 @@
         {
           "serviceType": "MQTT",
           "topic_pub": [
-            "SC/usr-2338764559/rm-159c1f588a/dht",
-            "SC/usr-2338764559/rm-159c1f588a/ServoDHT",
-            "SC/usr-2338764559/rm-159c1f588a/down"
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/dht",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/ServoDHT",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/down"
           ],
           "topic_sub": [
-            "SC/alerts/usr-2338764559/rm-159c1f588a/dht",
-            "SC/usr-2338764559/rm-159c1f588a/sampling"
+            "SC/alerts/usr-acf85f7c4a/rm-67b69a77c0/dht",
+            "SC/alerts/+/+/dht",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/sampling"
           ]
         }
       ],
-      "deviceID": "dev-1b4d6c9d90",
-      "timestamp": "2026-05-01 19:56:39"
+      "deviceID": "dev-dht-001",
+      "timestamp": "2026-05-17 15:15:26"
     },
     {
       "deviceName": "ActuatorControl",
@@ -190,39 +191,39 @@
         {
           "serviceType": "MQTT",
           "topic_pub": [
-            "SC/usr-2338764559/rm-159c1f588a/servoCurtain",
-            "SC/usr-2338764559/rm-159c1f588a/Light",
-            "SC/usr-2338764559/rm-159c1f588a/LedL",
-            "SC/usr-2338764559/rm-159c1f588a/down"
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/servoCurtain",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/Light",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/LedL",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/down"
           ],
           "topic_sub": [
-            "SC/usr-2338764559/rm-159c1f588a/servoCurtain",
-            "SC/usr-2338764559/rm-159c1f588a/LedL",
-            "SC/usr-2338764559/rm-159c1f588a/sampling"
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/servoCurtain/set",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/LedL/set",
+            "SC/usr-acf85f7c4a/rm-67b69a77c0/sampling"
           ]
         }
       ],
-      "deviceID": "dev-21a912bee4",
-      "timestamp": "2026-05-01 19:56:39"
+      "deviceID": "dev-act-001",
+      "timestamp": "2026-05-17 15:15:04"
     }
   ],
   "roomsList": [
     {
-      "roomID": "rm-159c1f588a",
-      "userID": "usr-2338764559",
-      "roomName": "randomRoom",
+      "roomID": "rm-67b69a77c0",
+      "userID": "usr-acf85f7c4a",
+      "roomName": "Firstroom",
       "times": {
-        "timeawake": "09:00",
-        "timesleep": "23:00"
+        "timeawake": "17:25",
+        "timesleep": "17:24"
       },
       "threshold_parameters": {
-        "hr_low": 34.0,
-        "hr_high": 45.0,
-        "temp_low": 23.0,
-        "temp_high": 45.0,
-        "hum_low": 23.0,
-        "hum_high": 67.0,
-        "light_threshold": 3000
+        "hr_low": 60.0,
+        "hr_high": 100.0,
+        "temp_low": 18.0,
+        "temp_high": 40.0,
+        "hum_low": 30.0,
+        "hum_high": 70.0,
+        "light_threshold": 2400
       },
       "thingspeak_info": {
         "channel_id": "3214159",
@@ -231,19 +232,19 @@
       },
       "connected_devices": [
         {
-          "deviceID": "dev-6e3bfb379c",
+          "deviceID": "dev-ppg-001",
           "role": "HealthMonitorPPG"
         },
         {
-          "deviceID": "dev-1b4d6c9d90",
+          "deviceID": "dev-dht-001",
           "role": "EnvMonitorDHT"
         },
         {
-          "deviceID": "dev-21a912bee4",
+          "deviceID": "dev-act-001",
           "role": "ActuatorControl"
         }
       ],
-      "timestamp": "2026-05-01 19:56:39"
+      "timestamp": "2026-05-17 15:22:27"
     }
   ],
   "usersList": [
@@ -263,20 +264,20 @@
     {
       "role": "User",
       "user_information": {
-        "userName": "randomPerson",
-        "phone": "+393513194480"
+        "userName": "Tatiana",
+        "phone": "+593155513433"
       },
       "dashboard_info": {
-        "dashboard_username": "randomPerson",
+        "dashboard_username": "Tatiana",
         "dashboard_password": null
       },
       "auth": {
-        "password_salt": "391eec3c4cba74e2",
-        "password_hash": "f107397f3379dedd8b034e9bde67a4c6465d3887b051d39db1d8a310be3b4db6"
+        "password_salt": "4116e449e608db25",
+        "password_hash": "44e584b10a560af291ecfc94458535f58cff84300f6444f914a4137ac2276da2"
       },
-      "timestamp": "2026-05-01 19:56:03",
-      "userID": "usr-2338764559"
+      "timestamp": "2026-05-17 15:11:49",
+      "userID": "usr-acf85f7c4a"
     }
   ],
-  "lastUpdate": "2026-05-01 20:18:32"
+  "lastUpdate": "2026-05-17 15:23:56"
 }

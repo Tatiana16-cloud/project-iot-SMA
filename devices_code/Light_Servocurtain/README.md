@@ -13,10 +13,9 @@ Firmware for the **ActuatorControl** device. Controls a curtain (servo) and a li
 
 ## Configuration
 
-Edit only these lines in `Light_Servocurtain.ino`:
+`DEVICE_ID` is pre-configured with a UUID taken from `catalog/device_pool.json` — no manual editing is needed after registering a room. The remaining line to set is the tunnel URL exposing the catalog:
 ```cpp
-// Paste the dev-<hex> UUID shown by the Telegram bot after registering the room
-#define DEVICE_ID          "dev-xxxxxxxxxx"
+#define DEVICE_ID          "dev-xxxxxxxxxx"   // value from catalog/device_pool.json
 #define CATALOG_BASE_URL   "https://your-tunnel.trycloudflare.com"
 ```
 
@@ -63,5 +62,5 @@ The TimeShift service reads `threshold_parameters.light_threshold` from the room
 ## Wokwi setup
 1. Expose the catalog: `cloudflared tunnel --url http://localhost:9080`
 2. Paste the URL into `CATALOG_BASE_URL`.
-3. Paste the minted `dev-<hex>` from the Telegram bot into `DEVICE_ID`.
+3. Make sure `DEVICE_ID` matches one of the UUIDs in `catalog/device_pool.json`. It does not need to be changed per registration — the catalog allocates and releases it automatically.
 4. Build and start the simulation.

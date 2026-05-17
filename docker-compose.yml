@@ -11,6 +11,7 @@ services:
       # - CATALOG_WRITE_TOKEN=supersecreto
     volumes:
       - ./catalog/catalog.json:/data/catalog.json:rw
+      - ./catalog/device_pool.json:/data/device_pool.json:rw
     restart: unless-stopped
 
 

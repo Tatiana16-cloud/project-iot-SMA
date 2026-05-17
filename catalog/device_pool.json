@@ -1,0 +1,100 @@
+{
+  "pools": {
+    "HealthMonitorPPG": [
+      {
+        "deviceID": "dev-ppg-001",
+        "status": "assigned",
+        "assigned_to_room": "rm-67b69a77c0",
+        "updated_at": "2026-05-17 15:12:40"
+      },
+      {
+        "deviceID": "dev-ppg-002",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      },
+      {
+        "deviceID": "dev-ppg-003",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      },
+      {
+        "deviceID": "dev-ppg-004",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      },
+      {
+        "deviceID": "dev-ppg-005",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      }
+    ],
+    "EnvMonitorDHT": [
+      {
+        "deviceID": "dev-dht-001",
+        "status": "assigned",
+        "assigned_to_room": "rm-67b69a77c0",
+        "updated_at": "2026-05-17 15:12:40"
+      },
+      {
+        "deviceID": "dev-dht-002",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      },
+      {
+        "deviceID": "dev-dht-003",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      },
+      {
+        "deviceID": "dev-dht-004",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      },
+      {
+        "deviceID": "dev-dht-005",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      }
+    ],
+    "ActuatorControl": [
+      {
+        "deviceID": "dev-act-001",
+        "status": "assigned",
+        "assigned_to_room": "rm-67b69a77c0",
+        "updated_at": "2026-05-17 15:12:40"
+      },
+      {
+        "deviceID": "dev-act-002",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      },
+      {
+        "deviceID": "dev-act-003",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      },
+      {
+        "deviceID": "dev-act-004",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      },
+      {
+        "deviceID": "dev-act-005",
+        "status": "available",
+        "assigned_to_room": null,
+        "updated_at": null
+      }
+    ]
+  }
+}

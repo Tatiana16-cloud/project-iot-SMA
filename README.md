@@ -30,23 +30,24 @@ Open the dashboard: `http://localhost:1880/ui/`
 
 - **User** — account credentials and dashboard link. Thresholds and schedule live per-room.
 - **Room** — owns `timeawake`, `timesleep`, `threshold_parameters` (hr_low/high, temp_low/high, hum_low/high, `light_threshold`), `thingspeak_info`, and `connected_devices` (3 fixed devices per room).
-- **Device** — UUID `dev-<hex>`, linked to one room. Templates live in `catalog/device_templates.json`.
+- **Device** — UUID linked to one room. Templates live in `catalog/device_templates.json`; the actual device UUIDs are pre-seeded in `catalog/device_pool.json`.
 - **ThingSpeak pool** — pre-seeded slots in `catalog/catalog.json`; automatically allocated on room creation and freed on room deletion.
+- **Device pool** — pre-seeded device UUIDs in `catalog/device_pool.json`, one pool per device role; allocated on room creation and freed on room deletion.
 
 ## User registration flow
 
 1. User sends `/start` in the Telegram bot.
 2. Bot runs the registration wizard: account info → at least one room (name, sleep times, thresholds, brightness level).
-3. Catalog mints UUIDs for user, room, and 3 devices; assigns a ThingSpeak pool slot.
-4. User pastes the minted `dev-<hex>` IDs into each ESP32 firmware and flashes the devices.
+3. Catalog mints UUIDs for user and room, assigns a ThingSpeak slot from the pool, and pulls 3 device UUIDs from `device_pool.json` (one per role).
+4. The assigned device UUIDs are pre-baked into the ESP32 firmware. The user only needs to power on the corresponding boards — no manual editing per registration.
 
 ## Device setup (ESP32)
 
-Each firmware file has a single line to edit after registering a room in the bot:
+Each firmware file has its `DEVICE_ID` set once, using a UUID taken from the device pool:
 ```cpp
-#define DEVICE_ID  "dev-xxxxxxxxxx"   // paste the UUID from the catalog
+#define DEVICE_ID  "dev-xxxxxxxxxx"   // value from catalog/device_pool.json
 ```
-The firmware discovers its `userID` and `roomID` automatically at boot by querying `GET /rooms`.
+The firmware discovers its `userID` and `roomID` automatically at boot by querying `GET /rooms`. When a room owning that `DEVICE_ID` exists, the device becomes active; when the room is deleted, the catalog releases the UUID back to the pool, ready for the next registration.
 
 ## Cloudflare Tunnel (required for Wokwi)
 
